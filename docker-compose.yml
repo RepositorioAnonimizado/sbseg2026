@@ -1,0 +1,58 @@
+services:
+
+  postgres-service:
+    container_name: postgres-container
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./postgres/.env
+    networks:
+      - database-network
+
+  server-service:
+    container_name: server-container
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+    volumes:
+      - ./server/code/:/home/server/
+    networks:
+      - database-network
+      - unsecured-network
+    depends_on:
+      - postgres-service
+    command: tail -f /dev/null
+
+  model-service:
+    container_name: model-container
+    build:
+      context: ./model/
+      dockerfile: Dockerfile
+    volumes:
+      - ./model/code/:/home/model/
+    networks:
+      - secured-network
+    command: tail -f /dev/null
+
+  user-service:
+    container_name: user-container
+    build:
+      context: ./user/
+      dockerfile: Dockerfile
+    volumes:
+      - ./user/code/:/home/user/
+    networks:
+      - secured-network
+      - unsecured-network
+    depends_on:
+      - model-service
+      - server-service
+    command: tail -f /dev/null
+
+networks:
+  database-network:
+    driver: bridge
+  secured-network:
+    driver: bridge
+  unsecured-network:
+    driver: bridge

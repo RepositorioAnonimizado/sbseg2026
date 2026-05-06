@@ -1,0 +1,24 @@
+from enum import Enum
+
+class Color(Enum):
+    GREEN = '\033[32m[USUÁRIO]\033[0m'
+
+class Addresses(Enum):
+    HOST = '0.0.0.0'
+    PORT = 8001
+
+    RETURN = 'user-container:8001'
+
+    SERVER_HOST = 'server-container'
+    SERVER_PORT = 8000
+
+    MODEL_HOST = 'model-container'
+    MODEL_PORT = 8002
+
+class ImagePath(Enum):
+    FACE_IMAGE_REG = '/home/user/faces/1.jpeg'
+    FACE_IMAGE_AUT = '/home/user/faces/2.jpeg'
+
+class Benchmark:
+    REGISTRATION_TIME = 0
+    AUTHENTICATION_TIME = 0
